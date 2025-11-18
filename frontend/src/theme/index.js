@@ -20,7 +20,7 @@ const fonts = {
   body: "'Nunito', sans-serif",
 };
 
-export const theme = extendTheme({
+const theme = extendTheme({
   colors,
   fonts,
   styles: {
@@ -32,4 +32,6 @@ export const theme = extendTheme({
     },
   },
 });
+
+export default theme;
 
