@@ -1,0 +1,23 @@
+# ----------------------------
+# FRONTEND (Node / React / Vite)
+# ----------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# ----------------------------
+# BACKEND (Maven / Spring Boot)
+# ----------------------------
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/.env
+
+# ----------------------------
+# GLOBAL / COMMON
+# ----------------------------
+*.log
+*.tmp
+*.swp
+*.idea/
+*.vscode/
+.DS_Store
