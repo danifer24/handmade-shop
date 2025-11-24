@@ -1,8 +1,9 @@
 import { Box, Image, Text, Flex, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-export default function ProductCard({ id, name, price, image }) {
+export default function ProductCard({ product, onAdd }) {
   const navigate = useNavigate();
+  const { id, name, price, image } = product;
 
   return (
     <Box
@@ -34,8 +35,8 @@ export default function ProductCard({ id, name, price, image }) {
           {price} €
         </Text>
 
-        <Button size="sm" colorScheme="brand" variant="solid">
-          Ver más
+        <Button size="sm" colorScheme="brand" variant="solid" onClick={() => onAdd(product)}>
+          Añadir al carrito
         </Button>
       </Flex>
     </Box>
