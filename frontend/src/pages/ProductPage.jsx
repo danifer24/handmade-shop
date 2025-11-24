@@ -1,3 +1,4 @@
+import { Box, Flex, Image, Button, Text, Heading } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
 const mockProducts = [

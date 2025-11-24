@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Button, HStack, Icon, Heading, useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, Menu, MenuButton, MenuItem, MenuList, Avatar } from "@chakra-ui/react";
+import { Box, Flex, Text, Button, HStack, Icon, Heading, useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, Menu, MenuButton, MenuItem, MenuList, Avatar, Badge } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlinePersonOutline } from "react-icons/md";
@@ -12,6 +12,9 @@ export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoggedIn, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const cartCount = useSelector((state) =>
+    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
 
   return (
     <Box as="header" bg="brand.500" color="white" px={6} py={4} boxShadow="md">
@@ -81,6 +84,20 @@ export default function Header() {
               _hover={{ transform: "scale(1.15)" }}
               transition="0.15s"
             />
+            {cartCount > 0 && (
+              <Badge
+                position="absolute"
+                top="-6px"
+                right="-6px"
+                bg="red.500"
+                color="white"
+                borderRadius="full"
+                fontSize="0.7rem"
+                px={2}
+              >
+                {cartCount}
+              </Badge>
+            )}
           </Button>
         </HStack>
       </Flex>

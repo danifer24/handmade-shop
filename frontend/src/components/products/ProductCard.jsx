@@ -1,9 +1,16 @@
 import { Box, Image, Text, Flex, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice";
 
-export default function ProductCard({ product, onAdd }) {
+export default function ProductCard({ product }) {
   const navigate = useNavigate();
   const { id, name, price, image } = product;
+  const dispatch = useDispatch();
+
+  const handlerAdd = () => {
+    dispatch(addToCart(product));
+  }
 
   return (
     <Box
@@ -35,7 +42,7 @@ export default function ProductCard({ product, onAdd }) {
           {price} €
         </Text>
 
-        <Button size="sm" colorScheme="brand" variant="solid" onClick={() => onAdd(product)}>
+        <Button size="sm" colorScheme="brand" variant="solid" onClick={() => handlerAdd()}>
           Añadir al carrito
         </Button>
       </Flex>
