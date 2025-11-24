@@ -1,13 +1,17 @@
-import { Box, Flex, Text, Button, HStack, Icon, Heading, useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody } from "@chakra-ui/react";
+import { Box, Flex, Text, Button, HStack, Icon, Heading, useDisclosure, IconButton, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, Menu, MenuButton, MenuItem, MenuList, Avatar } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../store/userSlice";
 
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isLoggedIn, user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   return (
     <Box as="header" bg="brand.500" color="white" px={6} py={4} boxShadow="md">
@@ -35,14 +39,41 @@ export default function Header() {
               transition="0.15s"
             />
           </Button>
-          <Button as={NavLink} to={"/login"} variant={"ghost"} p={0}>
+          {/* {isLoggedIn ? (
+            <span>Hola, {user.name}</span>
+          ) : (<Button as={NavLink} to={"/login"} variant={"ghost"} p={0}>
             <Icon
               as={MdOutlinePersonOutline}
               boxSize={7}
               _hover={{ transform: "scale(1.15)" }}
               transition="0.15s"
             />
-          </Button>
+          </Button>)} */}
+          {isLoggedIn ? (
+            <Menu>
+              <MenuButton as={Button} variant="ghost" px={2} _hover={{ bg: "white", transform: "scale(1.05)" }}
+                transition="all 0.2s ease">
+                <HStack spacing={2}>
+                  <Avatar size="sm" name={user.name} />
+                  <span>{user.name}</span>
+                </HStack>
+              </MenuButton>
+              <MenuList color="black">
+                <MenuItem>Perfil</MenuItem>
+                <MenuItem>Mis pedidos</MenuItem>
+                <MenuItem onClick={() => dispatch(logout())}>Cerrar sesión</MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
+            <Button as={NavLink} to={"/login"} variant={"ghost"} p={0}>
+              <Icon
+                as={MdOutlinePersonOutline}
+                boxSize={7}
+                _hover={{ transform: "scale(1.15)" }}
+                transition="0.15s"
+              />
+            </Button>
+          )}
           <Button as={NavLink} to={"/cart"} variant={"ghost"} p={0}>
             <Icon
               as={IoCartOutline}
@@ -64,12 +95,34 @@ export default function Header() {
         >
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
           <DrawerBody mt={4} display="flex" flexDirection="column" gap={4}>
-            <Box
-              _hover={{ color: "yellow.300", transform: "scale(1.05)" }}
-              transition="all 0.2s ease"
-            >
-              <NavLink to="/login" onClick={onClose}>Login</NavLink>
-            </Box>
+            {isLoggedIn ? (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  variant="ghost"
+                  justifyContent="flex-start"
+                  _hover={{ bg: "white", transform: "scale(1.03)" }}
+                  transition="all 0.2s ease"
+                  px={2}
+                >
+                  <HStack spacing={2}>
+                    <Avatar size="sm" name={user.name} />
+                    <span>{user.name}</span>
+                  </HStack>
+                </MenuButton>
+                <MenuList color="black">
+                  <MenuItem>Perfil</MenuItem>
+                  <MenuItem>Mis pedidos</MenuItem>
+                  <MenuItem onClick={() => dispatch(logout())}>Cerrar sesión</MenuItem>
+                </MenuList>
+              </Menu>
+            ) : (
+              <Box
+                _hover={{ color: "yellow.300", transform: "scale(1.05)" }}
+                transition="all 0.2s ease"
+              >
+                <NavLink to="/login" onClick={onClose}>Login</NavLink>
+              </Box>)}
             <Box
               _hover={{ color: "yellow.300", transform: "scale(1.05)" }}
               transition="all 0.2s ease"
