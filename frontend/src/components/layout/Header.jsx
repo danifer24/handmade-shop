@@ -6,15 +6,14 @@ import { IoCartOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/userSlice";
+import { selectTotalQuantity } from "../../store/cartSlice";
 
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoggedIn, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const cartCount = useSelector((state) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  );
+  const totalQuantity = useSelector(selectTotalQuantity);
 
   return (
     <Box as="header" bg="brand.500" color="white" px={6} py={4} boxShadow="md">
@@ -84,7 +83,7 @@ export default function Header() {
               _hover={{ transform: "scale(1.15)" }}
               transition="0.15s"
             />
-            {cartCount > 0 && (
+            {totalQuantity > 0 && (
               <Badge
                 position="absolute"
                 top="-6px"
@@ -95,7 +94,7 @@ export default function Header() {
                 fontSize="0.7rem"
                 px={2}
               >
-                {cartCount}
+                {totalQuantity}
               </Badge>
             )}
           </Button>
