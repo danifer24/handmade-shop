@@ -1,58 +1,81 @@
-import { Box, Flex, Image, Button, Text, Heading } from "@chakra-ui/react";
+import { Box, Image, Heading, Text, VStack, useToast, Button, HStack, IconButton } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-
-const mockProducts = [
-  {
-    id: "1",
-    name: "Vela artesanal",
-    price: 12.99,
-    image: "https://images.unsplash.com/photo-1517685352821-92cf88aee5a5",
-    description:
-      "Vela hecha a mano con cera natural y aroma a lavanda. Perfecta para decoración y relajación.",
-  },
-  {
-    id: "2",
-    name: "Taza pintada a mano",
-    price: 18.5,
-    image: "https://images.unsplash.com/photo-1526401281623-359b4bf71a5b",
-    description:
-      "Taza de cerámica pintada artesanalmente. Ideal para café, té o como regalo.",
-  },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart } from "../store/cartSlice";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 export default function ProductPage() {
-    const { id } = useParams();
-    const product = mockProducts.find((p) => p.id === id);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const MotionButton = motion.create(Button);
+  const [quantity, setQuantity] = useState(1);
 
-    if(!product) return <Text>Producto no encontrado</Text>
+  const product = useSelector((state) =>
+    state.products.find((p) => p.id === parseInt(id))
+  );
 
-    return (
-    <Flex
-      direction={{ base: "column", md: "row" }}
-      p={6}
-      bg="white"
-      borderRadius="lg"
-      boxShadow="md"
-      gap={6}
-    >
-      <Image
-        src={product.image}
-        alt={product.name}
-        borderRadius="md"
-        objectFit="cover"
-        maxW={{ base: "100%", md: "400px" }}
-      />
+  if (!product) return <Text>Producto no encontrado</Text>;
 
-      <Box>
-        <Heading mb={4}>{product.name}</Heading>
-        <Text fontSize="xl" color="brand.600" mb={4}>
-          {product.price} €
-        </Text>
-        <Text mb={6}>{product.description}</Text>
-        <Button colorScheme="brand" size="lg">
+  const increment = () => setQuantity(prev => prev + 1);
+  const decrement = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+
+  const handleAdd = () => {
+    dispatch(addToCart({ ...product, quantity }));
+    toast({
+      title: `${quantity} x ${product.name} añadido(s) al carrito 🛒`,
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "top-right",
+    });
+  };
+
+  return (
+    <Box p={8} maxW="800px" mx="auto">
+      <VStack spacing={6} align="start">
+        <Image
+          src={product.image}
+          alt={product.name}
+          borderRadius="xl"
+          objectFit="cover"
+          w="100%"
+          maxH="400px"
+        />
+
+        <Heading>{product.name}</Heading>
+        <Text fontSize="xl" color="brand.500">{product.price} €</Text>
+        <Text>{product.description}</Text>
+
+        <HStack spacing={4}>
+          <IconButton
+            icon={<AiOutlineMinus />}
+            size="sm"
+            onClick={decrement}
+            aria-label="Disminuir cantidad"
+          />
+          <Text fontSize="lg" fontWeight="bold">{quantity}</Text>
+          <IconButton
+            icon={<AiOutlinePlus />}
+            size="sm"
+            onClick={increment}
+            aria-label="Aumentar cantidad"
+          />
+        </HStack>
+
+        <MotionButton
+          colorScheme="brand"
+          size="lg"
+          w="100%"
+          onClick={handleAdd}
+          whileTap={{ scale: 1.1 }}
+          _hover={{ transform: "scale(1.05)" }}
+        >
           Añadir al carrito
-        </Button>
-      </Box>
-    </Flex>
+        </MotionButton>
+      </VStack>
+    </Box>
   );
 }
